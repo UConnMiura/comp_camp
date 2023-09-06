@@ -1,15 +1,3 @@
-title: \sf Lecture 1 - RNA-Seq analysis step-by-step
-header-includes:
-- \usepackage{color}
-- \usepackage{float}
-- \DeclareUnicodeCharacter{2212}{-}
-date: "Sept. 6, 2023"
-output:
-  bookdown::html_document2:
-    toc: true
-fontsize: 14pt
-geometry: margin=1in
-
 # Introduction to RNA-seq
 RNA-Seq data of the short read variety is typically generated on Illumina machines. The raw data for RNA-Seq datasets from "all" publications on NCBI are deposited online on sites such as Gene Expression Omnibus (GEO) [https://www.ncbi.nlm.nih.gov/geo/](https://www.ncbi.nlm.nih.gov/geo/) 
 
@@ -24,6 +12,7 @@ In this tutorial we will download raw .fastq files for an RNA-seq dataset from G
 
 MEME Website: [http://meme-suite.org/](http://meme-suite.org/)
 
+#library(knitr)
 knitr::include_graphics("./slop.png") 
 
 ```{r engine='bash', eval=F, echo=TRUE}
