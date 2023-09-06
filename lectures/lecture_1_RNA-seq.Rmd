@@ -13,7 +13,7 @@ In this tutorial we will download raw .fastq files for an RNA-seq dataset from G
 MEME Website: [http://meme-suite.org/](http://meme-suite.org/)
 
 #library(knitr)
-knitr::include_graphics("./slop.png") 
+#knitr::include_graphics("./slop.png") 
 
 ```{r engine='bash', eval=F, echo=TRUE}
 fastaFromBed -fi GENOME.fa -bed SUMMITS_100bp.bed -fo SUMMITS_100bp.fa
