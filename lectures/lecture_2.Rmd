@@ -1,5 +1,5 @@
 ---
-title: \sf testing out .yaml for this to make PDF
+title: \sf Making .html and .pdf from .Rmd
 header-includes:
 - \usepackage{color}
 - \usepackage{float}
