@@ -1,0 +1,16 @@
+---
+title: \sf testing out .yaml for this to make PDF
+header-includes:
+- \usepackage{color}
+- \usepackage{float}
+- \DeclareUnicodeCharacter{2212}{-}
+date: "Sept. 6, 2023"
+output:
+  bookdown::html_document2:
+    toc: true
+fontsize: 14pt
+geometry: margin=1in
+---
+
+
+# Testing this out now. 
