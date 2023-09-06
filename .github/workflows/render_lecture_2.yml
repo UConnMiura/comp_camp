@@ -1,4 +1,4 @@
-name: Build R Markdown
+name: Build R Markdown (please)
 
 on:
   push:
