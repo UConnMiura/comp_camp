@@ -30,7 +30,13 @@ jobs:
       
       - name: Install bookdown package
         run: Rscript -e 'install.packages("bookdown", repos="http://cran.rstudio.com/")'
-        
+
+      - name: Set Git identity
+        run: |
+          git config --global user.email "pedstunite@gmail.com"
+          git config --global user.name "Pedro Miura"
+
+          
       - name: Render R Markdown
         run: Rscript -e 'rmarkdown::render("lectures/lecture_2.Rmd")'
 
