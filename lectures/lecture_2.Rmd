@@ -16,3 +16,4 @@ geometry: margin=1in
 # Testing this out now. 
 ## section 1
 ```this is code```
+Don't forget to check actions. 
