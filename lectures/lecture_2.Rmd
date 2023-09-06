@@ -14,7 +14,7 @@ geometry: margin=1in
 
 
 # Testing this out again again. 
-MEME requires...:
+MEME requires:
 
 ```{r  out.width = "90%", echo=F, fig.align = "center", fig.cap="bedSlop"}
 #library(knitr)
