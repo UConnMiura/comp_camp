@@ -1,4 +1,4 @@
-name: Render Rmd to HTML
+name: Render Rmd to HTML guertin-style
 on:
   push:
     paths:
