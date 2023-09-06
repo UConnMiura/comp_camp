@@ -37,8 +37,9 @@ jobs:
       - name: Convert to PDF
         run: Rscript -e 'rmarkdown::render("lectures/lecture_2.Rmd", output_format = "pdf_document")'
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: rmarkdown-output
-          path: lectures/lecture_2.html, lectures/lecture_2.pdf
+      - name: Commit and push changes
+        run: |
+          git add lectures/lecture_2.html
+          git add lectures/lecture_2.pdf
+          git commit -m "Render Lecture_2.Rmd to HTML and PDF"
+          git push origin HEAD:main
