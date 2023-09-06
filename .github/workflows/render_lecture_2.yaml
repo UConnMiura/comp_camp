@@ -3,7 +3,7 @@ name: Build R Markdown
 on:
   push:
     paths:
-      - 'lectures/lecture_2.Rmd  # Adjust the branch name as needed
+      - 'lectures/lecture_2.Rmd'  # Adjust the branch name as needed
 
 jobs:
   build:
