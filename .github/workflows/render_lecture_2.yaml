@@ -1,0 +1,35 @@
+name: Build R Markdown
+
+on:
+  push:
+    paths:
+      - 'lectures/lecture_2.Rmd  # Adjust the branch name as needed
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v1
+
+      - name: Install dependencies
+        run: |
+          Rscript -e 'install.packages("rmarkdown")'
+          Rscript -e 'install.packages("tinytex"); tinytex::install_tinytex()'
+          Rscript -e 'tinytex:::install_prebuilt("tinytex")'
+
+      - name: Render R Markdown
+        run: Rscript -e 'rmarkdown::render("lecture_2.Rmd")'
+
+      - name: Convert to PDF
+        run: Rscript -e 'rmarkdown::render("lecture_2.Rmd", output_format = "pdf_document")'
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: rmarkdown-output
+          path: lecture_2.html, lecture_2.pdf
