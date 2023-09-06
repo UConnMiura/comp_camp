@@ -14,6 +14,14 @@ geometry: margin=1in
 
 
 # Testing this out again again. 
+MEME requires...:
+
+```{r  out.width = "90%", echo=F, fig.align = "center", fig.cap="bedSlop"}
+#library(knitr)
+knitr::include_graphics("./slop.png") 
+
+
+
 ## section sssddss
 ```this is code```
 
