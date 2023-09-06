@@ -1,5 +1,5 @@
 ---
-title: \sf Making .html and .pdf from .Rmd
+title: \sf Making .html and .pdf from .Rmd (pandoc setup)
 header-includes:
 - \usepackage{color}
 - \usepackage{float}
