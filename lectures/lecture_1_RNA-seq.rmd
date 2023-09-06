@@ -9,3 +9,25 @@ output:
     toc: true
 fontsize: 14pt
 geometry: margin=1in
+
+# Last Time:
+
+## Review of analysis pipeline
+
+# TODAY: de novo Motif searching with MEME
+
+## MEME: Multiple Em for Motif Elucidation
+
+
+MEME Website: [http://meme-suite.org/](http://meme-suite.org/)
+
+knitr::include_graphics("./slop.png") 
+
+```{r engine='bash', eval=F, echo=TRUE}
+fastaFromBed -fi GENOME.fa -bed SUMMITS_100bp.bed -fo SUMMITS_100bp.fa
+#-name: Will use the 'name' column from bed file to name sequence
+#-fi: Input fasta sequences to retrieve interval sequences from
+#-bed: Input bed file
+#-fo: Output fasta file
+```
+
