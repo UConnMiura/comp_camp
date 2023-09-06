@@ -10,9 +10,12 @@ output:
 fontsize: 14pt
 geometry: margin=1in
 
-# Last Time:
+# Introduction to RNA-seq
+RNA-Seq data of the short read variety is typically generated on Illumina machines. The raw data for RNA-Seq datasets from "all" publications on NCBI are deposited online on sites such as Gene Expression Omnibus (GEO) [https://www.ncbi.nlm.nih.gov/geo/](https://www.ncbi.nlm.nih.gov/geo/) 
 
-## Review of analysis pipeline
+In this tutorial we will download raw .fastq files for an RNA-seq dataset from GEO, generate .bam files for visualization, and perform downstream analysis for differential expression.
+
+## Obtaining FASTQ files using XX
 
 # TODAY: de novo Motif searching with MEME
 
