@@ -26,13 +26,13 @@ jobs:
           Rscript -e 'tinytex:::install_prebuilt("tinytex")'
 
       - name: Render R Markdown
-        run: Rscript -e 'rmarkdown::render("lecture_2.Rmd")'
+        run: Rscript -e 'rmarkdown::render("lectures/lecture_2.Rmd")'
 
       - name: Convert to PDF
-        run: Rscript -e 'rmarkdown::render("lecture_2.Rmd", output_format = "pdf_document")'
+        run: Rscript -e 'rmarkdown::render("lectures/lecture_2.Rmd", output_format = "pdf_document")'
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
           name: rmarkdown-output
-          path: lecture_2.html, lecture_2.pdf
+          path: lectures/lecture_2.html, lectures/lecture_2.pdf
