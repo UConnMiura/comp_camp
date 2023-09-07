@@ -1,5 +1,5 @@
 ---
-title: \sf RNA-Seq analysis (short read)
+title: \sf RNA-Seq analysis tutorial (short read)
 header-includes:
 - \usepackage{color}
 - \usepackage{float}
