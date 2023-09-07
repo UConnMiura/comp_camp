@@ -1,10 +1,10 @@
 ---
-title: \sf Short read RNA-Seq analysis
+title: \sf RNA-Seq analysis (short read)
 header-includes:
 - \usepackage{color}
 - \usepackage{float}
 - \DeclareUnicodeCharacter{2212}{-}
-date: "Sept. 6, 2023"
+date: "March 20, 2023"
 output:
   bookdown::html_document2:
     toc: true
@@ -12,17 +12,19 @@ fontsize: 14pt
 geometry: margin=1in
 ---
 
+
 # Getting started
 
 A useful skill to have under your belt is to identify RNA-Seq datasets in published papers that you can re-analyze on your own to ask new questions. RNA-seq datasets are abundant, and publicaly accessible. When a group generates RNA-Seq data and publishes a paper with this data, there are always many unexplored analysis that can be done. For example, in the Miura lab, we are interested in Alternative Polyadenylation and Alternative Splicing. Existing RNA-Seq datasets can be re-analyzed using tools such as `QAPA` and `rMATS`. We will perform these analysis as part of this tutorial on a published RNA-Seq dataset.
 
-For more on the usefuless of re-analyzing RNA-Seq data as a tool for learning and discovery, see this [article](https://doi.org/10.1016/j.molcel.2013.01.031) by our department chair Brent Graveley.
+For more on the usefuless of re-analyzing RNA-Seq data as a tool for learning, see this [article](https://doi.org/10.1016/j.molcel.2013.01.031) by our department Brent Graveley.
 
 ## Finding Existing RNA-Seq datasets
 
 We will be using a short read RNA-Seq dataset from [Kiltschewskij et al., NAR, 2023](https://academic.oup.com/nar/article/51/15/8181/7192633). 
 
 The dataset is a neural differentiation of SHSY5Y cells performed on a NextSeq500 Illumina sequencer. The dataset, deposited in GEO, can be found here: [https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE155432](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE155432).
+
 
 ### The dataset
 
@@ -111,8 +113,7 @@ fasterq-dump /labs/miura/your_name/SHSY5Y/SRR12352390/SRR12352390.sra
 SAMPLES="SRR12352385 SRR12352386 SRR12352387 SRR12352388 SRR12352389 SRR12352390"
 for SAMPLE in $SAMPLES; do
     fasterq-dump /labs/miura/your_name/SHSY5Y/${SAMPLE}/${SAMPLE}.sra
-done
-```
+done```
 
 Using the for loop is a more versatile method (less typing involved!)
 
@@ -121,8 +122,12 @@ Using the for loop is a more versatile method (less typing involved!)
 There are different methods to align RNA-Seq reads to the genome in a splicing aware manner. Here we use `STAR` because it is compatible with downstream analysis of alternative splicing with `rMATS`. If you are looking just for gene expression changes, then a much faster approach is to use pseudo-alignment methods such as [Salmon](https://combine-lab.github.io/salmon/) or [Kallisto](https://pachterlab.github.io/kallisto/about). 
 
 This is a resource intensive job. So we've increased processors to 6 and mem to 100G.
+
 To run STAR you need an index file for homosapiens. I've provided one here:
+
 ```/labs/Miura/JD_Ngn/STAR/index/homsap_genome_all_cdna_all_ensembl104_grch38_sjdboverhang75```
+
+Here is the slurm script for running STAR. 
 
 ```#!/bin/bash
 #SBATCH --job-name=run_STAR
@@ -187,6 +192,81 @@ done
 ```
 
 
-## Visualizing using IGV
+## Visualizing bam files using IGV
 
+Now you have .bam and .bai files for each RNA-Seq sample! The .bam files are quite big, and depending on your local computer, they might be too big to conveniently handle. Let's try to visualize them on IGV.
+
+Download and Install [IGV](https://software.broadinstitute.org/software/igv/download).
+
+Open IGV and then in the top left corner, select "Human (GRCh38/hg38)"
+
+File > load From File
+-select your .bam file. Just pick one for now.
+
+Navigate to a gene of interest. For example "CALM1". Do you see the coverage? If so, great!
+
+Next, try to load all 6 tracks. Adjust the window sizes and other parameters to become comfortable. Navigate to these genes: 
+```APBA2, SUGT1, DCUN1D5```
+Zoom in on their 3'UTR regions. Do you notice any interesting trends in read coverage over the 3'UTRs?
+
+## Generating smaller "bigwig" files for visualization
+
+The bam files are sometimes tough to work with because of their size. We can do a lot with simpler files that do not show individual reads. Let's try to generate `bigwig` files using `deeptools`
+
+### Conda
+In order to install `deeptools` on the HPC, we will use conda. In order to learn how to use conda for installation purposes, go [TO BE PROVIDED].
+
+Here's the slurm script for using `deeptools`. 
+
+```#!/bin/bash
+
+#SBATCH --job-name=bigwig
+#SBATCH -N 1
+#SBATCH -n 1
+#SBATCH -c 10 
+#SBATCH --partition=general
+#SBATCH --qos=general
+#SBATCH --mail-type=END
+#SBATCH --mem=100G
+#SBATCH --mail-user=miura@uchc.edu
+#SBATCH --output=/labs/miura/your_name/SHSY5Y/eofiles/%x.%j.out
+#SBATCH --error=/labs/miura/your_name/SHSY5Y/eofiles/%x.%j.err
+
+source ~/.bashrc
+conda activate tools
+
+cd /labs/miura/yourfolder/SHSY/STAR/outs
+SAMPLES="SRR12352385 SRR12352386 SRR12352387 SRR12352388 SRR12352389 SRR12352390"
+
+for SAMPLE in $SAMPLES; do
+    bamCoverage -b ${SAMPLE}Aligned.sortedByCoord.out.bam -o ${SAMPLE}_fwd.bw --filterRNAstrand forward
+    bamCoverage -b ${SAMPLE}Aligned.sortedByCoord.out.bam -o ${SAMPLE}_rev.bw --filterRNAstrand reverse
+done```
+
+# OTHER
+
+
+
+Last time we used `bedtools` to tell us the number of reads within our peaks and also what the closest genes were to peaks. However, one caveat with `bedtools closest`, is that it chooses the closet edge of your targets (genes) to compare your peaks locations to. This means that it is not always obvious whether or not your peak is closest to the gene start or end. One way to get around this is to create a new annotation list that just contains TSSs. This would allow you to use `bedtools closest` to get the closest TSS to your peak.
+
+```{r  out.width = "90%", echo=F, fig.align = "center", fig.cap="peak assignment problem"}
+#library(knitr)
+knitr::include_graphics("Peak_assignment.png") 
+```
+
+
+
+Using `awk`, we can easily create such a TSS file. The awk sript below creates a new file and sets both the start and stop to the TSS of the gene, which is the 'start' for genes on the plus strand and the 'stop' for genes on the minus strand.
+
+```{r engine='bash', eval=F, echo=TRUE}
+awk '{OFS="\t";} { if($6=="+")
+print $1, $2, $2+1, $4, $5, $6;
+else 
+print $1, $3-1, $3, $4, $5, $6}' hg38_genes.bed > hg38_genes_strandedTSS.bed
+```
+One can then use `bedtools closest` to determine the closest TSS (or promoter) to each peak location.
+
+```{r engine='bash', eval=F, echo=TRUE}
+bedtools closest -a PEAKS.bed -b TSS.bed > OUTFILE.bed
+```
 
