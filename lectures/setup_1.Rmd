@@ -1,0 +1,59 @@
+---
+title: \sf Using Conda for software installation
+header-includes:
+- \usepackage{color}
+- \usepackage{float}
+- \DeclareUnicodeCharacter{2212}{-}
+date: "Sept 7, 2023"
+output:
+  bookdown::html_document2:
+    toc: true
+fontsize: 14pt
+geometry: margin=1in
+---
+
+
+# Installing conda
+
+Before conda, life in bioinformatics was hell. Now it is just a little less hellish because installing software packages and dependencies has a somewhat turn key solution. 
+
+[Conda](https://anaconda.org/anaconda/conda) is open source and can run on the HPC or your local machine. 
+
+Many of the software packages you use will have many dependencies (other software packages). As new versions of software are released, they might have updated depenencies on newer versions of other software. It is convenient to have different `environments` that one can use for a particular suite of analysis tools. Or even environments that are used for just one (annoying and finnicky) tool. 
+
+You can follow these instructions to install [conda]https://docs.conda.io/projects/conda/en/latest/user-guide/install/macos.html on your Mac.
+
+For working installing conda on your home directory of the HPC.
+Installation instructions for conda install in [linux](https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html)
+
+Here is a conda installation [tutorial](https://rabernat.medium.com/custom-conda-environments-for-data-science-on-hpc-clusters-32d58c63aa95)
+
+** I need to make sure that this installation works on the HPC. It was a long time ago that I did it myself **
+
+There is a lot to learn regarding conda, but here is a [cheatsheet](https://docs.conda.io/projects/conda/en/latest/_downloads/843d9e0198f2a193a3484886fa28163c/conda-cheatsheet.pdf) that is helpful.
+
+So assuming conda is installed, let's create a new environment to use for running `deeptools`
+
+```conda create --name MyDeeptoolsEnv
+```
+
+"MyDeeptoolsEnv" is a lot of letters. You can call your environments whatever you want.
+
+Assuming this goes smoothly, you can then activate the envinroment.
+
+```conda activate MyDeeptoolsEnv
+```
+
+Now we need to install bioconda. more info on bioconda [here](https://bioconda.github.io/)
+
+```conda config --add channels defaults
+conda config --add channels bioconda
+conda config --add channels conda-forge
+conda config --set channel_priority strict
+```
+Ok, with bioconda set up on our "MyDeeptoolsEnv" we can now actually install deeptools
+
+```conda install -c bioconda deeptools
+```
+
+# x
