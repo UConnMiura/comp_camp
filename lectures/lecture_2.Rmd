@@ -16,7 +16,7 @@ geometry: margin=1in
 
 A useful skill to have under your belt is to identify RNA-Seq datasets in published papers that you can re-analyze on your own to ask new questions. RNA-seq datasets are abundant, and publicaly accessible. When a group generates RNA-Seq data and publishes a paper with this data, there are always many unexplored analysis that can be done. For example, in the Miura lab, we are interested in Alternative Polyadenylation and Alternative Splicing. Existing RNA-Seq datasets can be re-analyzed using tools such as `QAPA` and `rMATS`. We will perform these analysis as part of this tutorial on a published RNA-Seq dataset.
 
-For more on the usefuless of re-analyzing RNA-Seq data as a tool for learning, see this [article](https://doi.org/10.1016/j.molcel.2013.01.031) by our department Brent Graveley.
+For more on the usefuless of re-analyzing RNA-Seq data as a tool for learning and discovery, see this [article](https://doi.org/10.1016/j.molcel.2013.01.031) by our department chair Brent Graveley.
 
 ## Finding Existing RNA-Seq datasets
 
