@@ -4,7 +4,7 @@ header-includes:
 - \usepackage{color}
 - \usepackage{float}
 - \DeclareUnicodeCharacter{2212}{-}
-date: "March 20, 2023"
+date: "Sept 8, 2023"
 output:
   bookdown::html_document2:
     toc: true
@@ -214,9 +214,9 @@ Zoom in on their 3'UTR regions. Do you notice any interesting trends in read cov
 The bam files are sometimes tough to work with because of their size. We can do a lot with simpler files that do not show individual reads. Let's try to generate `bigwig` files using `deeptools`
 
 ### Conda
-In order to install `deeptools` on the HPC, we will use conda. In order to learn how to use conda for installation purposes, go [TO BE PROVIDED].
+In order to install `deeptools` on the HPC, we will use conda. In order to learn how to use conda for installation purposes, go here [TO BE PROVIDED]. You'll need to have deeptools installed, and a conda environment, "MyDeeptoolsEnv" for the below script to work.
 
-Here's the slurm script for using `deeptools`. 
+Here's a slurm script for using `deeptools` to generate .bw files for the .bams. Note that forward and reverse strand specific tracks are generated for each file. This can be useful for visualizing regions where there is convergent overlapping gene expresssion. 
 
 ```#!/bin/bash
 
@@ -233,7 +233,7 @@ Here's the slurm script for using `deeptools`.
 #SBATCH --error=/labs/miura/your_name/SHSY5Y/eofiles/%x.%j.err
 
 source ~/.bashrc
-conda activate tools
+conda activate MyDeeptoolsEnv
 
 cd /labs/miura/yourfolder/SHSY/STAR/outs
 SAMPLES="SRR12352385 SRR12352386 SRR12352387 SRR12352388 SRR12352389 SRR12352390"
@@ -241,11 +241,17 @@ SAMPLES="SRR12352385 SRR12352386 SRR12352387 SRR12352388 SRR12352389 SRR12352390
 for SAMPLE in $SAMPLES; do
     bamCoverage -b ${SAMPLE}Aligned.sortedByCoord.out.bam -o ${SAMPLE}_fwd.bw --filterRNAstrand forward
     bamCoverage -b ${SAMPLE}Aligned.sortedByCoord.out.bam -o ${SAMPLE}_rev.bw --filterRNAstrand reverse
-done```
+done
+```
+
+You can now transfer these files to your local computer (which are much smaller), and try visualizing them on IGV.
 
 # OTHER
 
 
+
+
+# mike's
 
 Last time we used `bedtools` to tell us the number of reads within our peaks and also what the closest genes were to peaks. However, one caveat with `bedtools closest`, is that it chooses the closet edge of your targets (genes) to compare your peaks locations to. This means that it is not always obvious whether or not your peak is closest to the gene start or end. One way to get around this is to create a new annotation list that just contains TSSs. This would allow you to use `bedtools closest` to get the closest TSS to your peak.
 
