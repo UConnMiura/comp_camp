@@ -1,5 +1,5 @@
 ---
-title: \sf Making .html and .pdf from .Rmd (pandoc setup)
+title: \sf Short read RNA-Seq analysis
 header-includes:
 - \usepackage{color}
 - \usepackage{float}
