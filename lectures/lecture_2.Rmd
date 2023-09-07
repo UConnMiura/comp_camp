@@ -50,12 +50,13 @@ Create a directory called something like `/labs/miura/your_name/SHSY5Y`
 Enter into that directory 
 ```cd /labs/miura/your_name/SHSY5Y```
 
-create a new file called `prefetch.sl` and edit it
+create a new file called `prefetch.sl` and edit it by entering
 ```nano prefetch.sl```
 
 Here is the code for `prefetch.sl` that you can then paste in
 
-```#!/bin/bash
+```{bash, eval=FALSE, echo=TRUE, background="gray"}
+#!/bin/bash
 
 #SBATCH --job-name=prefetch
 #SBATCH -N 1
@@ -72,8 +73,8 @@ Here is the code for `prefetch.sl` that you can then paste in
 module load sratoolkit
 prefetch SRX8851832 SRX8851833 SRX8851834 SRX8851835 SRX8851836 SRX8851837
 ```
-You will change  `miura@uchc.edu` to your email.
-Change the `--output` and `-error` flags to whatever you like. I suggest `/labs/miura/your_name/SHSY5Y/eofiles`
+* You will change  `miura@uchc.edu` to your email.
+* Change the `--output` and `-error` flags to whatever you like. I suggest `/labs/miura/your_name/SHSY5Y/eofiles`
 
 remember to change permissions of prefetch.sl so that you can execute the command:
 ```{bash, eval=FALSE, echo=TRUE, background="gray"}
@@ -81,7 +82,9 @@ chmod +x prefetch.sl
 ```
 
 then run the job by entering:
-```sbatch prefetch.sl```
+```{bash, eval=FALSE, echo=TRUE, background="gray"}
+sbatch prefetch.sl
+```
 
 You can monitor progress of the job by entering:
 ```{bash, eval=FALSE, echo=TRUE, background="gray"}
@@ -97,7 +100,8 @@ Now you will use a tool called `fasterqdump` which is also part of the `sratoolk
 
 I'm going to **skip the SBATCH fields** and just tell you the commands you need to have in your script. Maybe call it `fasterdump.sh`
 
-```module load sratoolkit
+```{bash, eval=FALSE, echo=TRUE, background="gray"}
+module load sratoolkit
 fasterq-dump /labs/miura/your_name/SHSY5Y/SRR12352385/SRR12352385.sra
 fasterq-dump /labs/miura/your_name/SHSY5Y/SRR12352386/SRR12352386.sra
 fasterq-dump /labs/miura/your_name/SHSY5Y/SRR12352387/SRR12352387.sra
@@ -108,12 +112,14 @@ fasterq-dump /labs/miura/your_name/SHSY5Y/SRR12352390/SRR12352390.sra
 
 **Alternatively** you could use a `for` loop to accomplish the same thing
 
-```cd /labs/miura/your_name/SHSY5Y/
+```{bash, eval=FALSE, echo=TRUE, background="gray"}
+cd /labs/miura/your_name/SHSY5Y/
 
 SAMPLES="SRR12352385 SRR12352386 SRR12352387 SRR12352388 SRR12352389 SRR12352390"
 for SAMPLE in $SAMPLES; do
     fasterq-dump /labs/miura/your_name/SHSY5Y/${SAMPLE}/${SAMPLE}.sra
-done```
+done
+```
 
 Using the for loop is a more versatile method (less typing involved!)
 
@@ -123,13 +129,15 @@ There are different methods to align RNA-Seq reads to the genome in a splicing a
 
 This is a resource intensive job. So we've increased processors to 6 and mem to 100G.
 
-To run STAR you need an index file for homosapiens. I've provided one here:
+To run STAR you need an index file for homo sapiens. I've provided one here:
 
-```/labs/Miura/JD_Ngn/STAR/index/homsap_genome_all_cdna_all_ensembl104_grch38_sjdboverhang75```
+```{bash, eval=FALSE, echo=TRUE, background="gray"}
+/labs/Miura/JD_Ngn/STAR/index/homsap_genome_all_cdna_all_ensembl104_grch38_sjdboverhang75
+```
+* Here is the slurm script for running STAR. 
 
-Here is the slurm script for running STAR. 
-
-```#!/bin/bash
+```{bash, eval=FALSE, echo=TRUE, background="gray"}
+#!/bin/bash
 #SBATCH --job-name=run_STAR
 #SBATCH -N 1
 #SBATCH -n 1
@@ -176,7 +184,8 @@ We would like to visualize the RNA-Seq reads on a local computer using Integrate
 
 We will run this script using SBATCH as in the previous commands.
 
-```module load IGVtools/2.9.1
+```{bash, eval=FALSE, echo=TRUE, background="gray"}
+module load IGVtools/2.9.1
 module load java/11.0.11
 module load samtools/1.9
 
@@ -206,7 +215,10 @@ File > load From File
 Navigate to a gene of interest. For example "CALM1". Do you see the coverage? If so, great!
 
 Next, try to load all 6 tracks. Adjust the window sizes and other parameters to become comfortable. Navigate to these genes: 
-```APBA2, SUGT1, DCUN1D5```
+
+```{bash, eval=FALSE, echo=TRUE, background="gray"}
+APBA2, SUGT1, DCUN1D5
+```
 Zoom in on their 3'UTR regions. Do you notice any interesting trends in read coverage over the 3'UTRs?
 
 ## Generating smaller "bigwig" files for visualization
@@ -218,7 +230,8 @@ In order to install `deeptools` on the HPC, we will use conda. In order to learn
 
 Here's a slurm script for using `deeptools` to generate .bw files for the .bams. Note that forward and reverse strand specific tracks are generated for each file. This can be useful for visualizing regions where there is convergent overlapping gene expresssion. 
 
-```#!/bin/bash
+```{bash, eval=FALSE, echo=TRUE, background="gray"}
+#!/bin/bash
 
 #SBATCH --job-name=bigwig
 #SBATCH -N 1
