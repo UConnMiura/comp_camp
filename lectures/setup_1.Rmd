@@ -46,7 +46,8 @@ Assuming this goes smoothly, you can then activate the envinroment.
 
 Now we need to install bioconda. more info on bioconda [here](https://bioconda.github.io/)
 
-```conda config --add channels defaults
+```{r engine='bash', eval=F, echo=TRUE}
+conda config --add channels defaults
 conda config --add channels bioconda
 conda config --add channels conda-forge
 conda config --set channel_priority strict
