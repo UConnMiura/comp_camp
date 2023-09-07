@@ -343,7 +343,6 @@ display: none;
 <div id="TOC">
 <ul>
 <li><a href="#installing-conda" id="toc-installing-conda"><span class="toc-section-number">1</span> Installing Conda</a></li>
-<li><a href="#x" id="toc-x"><span class="toc-section-number">2</span> x</a></li>
 </ul>
 </div>
 
@@ -364,12 +363,13 @@ Installation instructions for conda install in <a href="https://docs.conda.io/pr
 <p>Assuming this goes smoothly, you can then activate the envinroment.</p>
 <p><code>conda activate MyDeeptoolsEnv</code></p>
 <p>Now we need to install bioconda. more info on bioconda <a href="https://bioconda.github.io/">here</a></p>
-<p><code>conda config --add channels defaults conda config --add channels bioconda conda config --add channels conda-forge conda config --set channel_priority strict</code>
-Ok, with bioconda set up on our “MyDeeptoolsEnv” we can now actually install deeptools</p>
+<pre class="bash"><code>conda config --add channels defaults
+conda config --add channels bioconda
+conda config --add channels conda-forge
+conda config --set channel_priority strict</code></pre>
+<p>Ok, with bioconda set up on our “MyDeeptoolsEnv” we can now actually install deeptools</p>
 <p><code>conda install -c bioconda deeptools</code></p>
-</div>
-<div id="x" class="section level1" number="2">
-<h1><span class="header-section-number">2</span> x</h1>
+<p>Now we are ready to run deeptools! You can find a usage of deeptools in the short read RNA-Seq <a href="https://uconnmiura.github.io/comp_camp/lectures/lecture_2.html#conda">Tutorial</a></p>
 </div>
 
 
