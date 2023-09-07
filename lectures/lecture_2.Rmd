@@ -24,7 +24,6 @@ We will be using a short read RNA-Seq dataset from [Kiltschewskij et al., NAR, 2
 
 The dataset is a neural differentiation of SHSY5Y cells performed on a NextSeq500 Illumina sequencer. The dataset, deposited in GEO, can be found here: [https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE155432](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE155432).
 
-
 ### The dataset
 
 | SRR           |   SRX         | Condition |
