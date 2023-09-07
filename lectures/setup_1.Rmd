@@ -57,4 +57,6 @@ Ok, with bioconda set up on our "MyDeeptoolsEnv" we can now actually install dee
 ```conda install -c bioconda deeptools
 ```
 
-# x
+Now we are ready to run deeptools! You can find a usage of deeptools in the short read RNA-Seq [Tutorial](https://uconnmiura.github.io/comp_camp/lectures/lecture_2.html#conda)
+
+
