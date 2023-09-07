@@ -12,26 +12,9 @@ fontsize: 14pt
 geometry: margin=1in
 ---
 
-
-# Testing this out again . 
-MEME requires:
-
-```{r  out.width = "90%", echo=F, fig.align = "center", fig.cap="peak assignment problem"}
-#library(knitr)
-knitr::include_graphics("Peak_assignment.png") 
-```
-
-
-## section sssddss
-```this is code```
-
-
-* `.html' file output
-
-
 # Getting started
 
-A useful skill to have under your belt is to identify RNA-Seq datasets in published papers that you can re-analyze on your own to ask new questions. RNA-seq datasets are abundant, and publicaly accessible. When a group generates RNA-Seq data and publishes a paper with this data, there are always many unexplored analysis that can be done. For example, in the Miura lab, we are interested in Alternative Polyadenylation and Alternative Splicing. Existing RNA-Seq datasets can be re-analyzed using tools such as `Qapa` and `rMATS`. We will perform these analysis as part of this tutorial on a published RNA-Seq dataset.
+A useful skill to have under your belt is to identify RNA-Seq datasets in published papers that you can re-analyze on your own to ask new questions. RNA-seq datasets are abundant, and publicaly accessible. When a group generates RNA-Seq data and publishes a paper with this data, there are always many unexplored analysis that can be done. For example, in the Miura lab, we are interested in Alternative Polyadenylation and Alternative Splicing. Existing RNA-Seq datasets can be re-analyzed using tools such as `QAPA` and `rMATS`. We will perform these analysis as part of this tutorial on a published RNA-Seq dataset.
 
 For more on the usefuless of re-analyzing RNA-Seq data as a tool for learning, see this [article](https://doi.org/10.1016/j.molcel.2013.01.031) by our department Brent Graveley.
 
@@ -90,4 +73,121 @@ prefetch SRX8851832 SRX8851833 SRX8851834 SRX8851835 SRX8851836 SRX8851837
 ```
 You will change  `miura@uchc.edu` to your email.
 Change the `--output` and `-error` flags to whatever you like. I suggest `/labs/miura/your_name/SHSY5Y/eofiles`
+
+remember to change permissions of prefetch.sl so that you can execute the command:
+```{bash, eval=FALSE, echo=TRUE, background="gray"}
+chmod +x prefetch.sl
+```
+
+then run the job by entering:
+```sbatch prefetch.sl```
+
+You can monitor progress of the job by entering:
+```{bash, eval=FALSE, echo=TRUE, background="gray"}
+squeue -u pmiura
+```
+
+* substitute your own username for pmiura
+
+
+## converting to fastq files
+
+Now you will use a tool called `fasterqdump` which is also part of the `sratoolkit`
+
+I'm going to **skip the SBATCH fields** and just tell you the commands you need to have in your script. Maybe call it `fasterdump.sh`
+
+```module load sratoolkit
+fasterq-dump /labs/miura/your_name/SHSY5Y/SRR12352385/SRR12352385.sra
+fasterq-dump /labs/miura/your_name/SHSY5Y/SRR12352386/SRR12352386.sra
+fasterq-dump /labs/miura/your_name/SHSY5Y/SRR12352387/SRR12352387.sra
+fasterq-dump /labs/miura/your_name/SHSY5Y/SRR12352388/SRR12352388.sra
+fasterq-dump /labs/miura/your_name/SHSY5Y/SRR12352389/SRR12352389.sra
+fasterq-dump /labs/miura/your_name/SHSY5Y/SRR12352390/SRR12352390.sra
+```
+
+**Alternatively** you could use a `for` loop to accomplish the same thing
+
+```cd /labs/miura/your_name/SHSY5Y/
+
+SAMPLES="SRR12352385 SRR12352386 SRR12352387 SRR12352388 SRR12352389 SRR12352390"
+for SAMPLE in $SAMPLES; do
+    fasterq-dump /labs/miura/your_name/SHSY5Y/${SAMPLE}/${SAMPLE}.sra
+done
+```
+
+Using the for loop is a more versatile method (less typing involved!)
+
+## Running the STAR aligner
+
+There are different methods to align RNA-Seq reads to the genome in a splicing aware manner. Here we use `STAR` because it is compatible with downstream analysis of alternative splicing with `rMATS`. If you are looking just for gene expression changes, then a much faster approach is to use pseudo-alignment methods such as [Salmon](https://combine-lab.github.io/salmon/) or [Kallisto](https://pachterlab.github.io/kallisto/about). 
+
+This is a resource intensive job. So we've increased processors to 6 and mem to 100G.
+To run STAR you need an index file for homosapiens. I've provided one here:
+```/labs/Miura/JD_Ngn/STAR/index/homsap_genome_all_cdna_all_ensembl104_grch38_sjdboverhang75```
+
+```#!/bin/bash
+#SBATCH --job-name=run_STAR
+#SBATCH -N 1
+#SBATCH -n 1
+#SBATCH -c 6
+#SBATCH --partition=general
+#SBATCH --qos=general
+#SBATCH --mail-type=END
+#SBATCH --mem=100G
+#SBATCH --mail-user=miura@uchc.edu
+#SBATCH --output=/labs/miura/your_name/SHSY5Y/eofiles/%x.%j.out
+#SBATCH --error=/labs/miura/your_name/SHSY5Y/eofiles/%x.%j.err
+
+module load STAR/2.7.1a
+
+cd /projects/Karlsruhe/SHSY/
+SAMPLES="SRR12352385 SRR12352386 SRR12352387 SRR12352388 SRR12352389 SRR12352390"
+
+for SAMPLE in $SAMPLES; do
+	STAR --runThreadN 6 \
+	--genomeDir /labs/Miura/JD_Ngn/STAR/index/homsap_genome_all_cdna_all_ensembl104_grch38_sjdboverhang75 \
+	--readFilesIn /labs/miura/your_name/SHSY5Y/${SAMPLE}.fastq \
+	--outFileNamePrefix /labs/miura/your_name/SHSY5Y/outs/${SAMPLE} \
+	--outSAMtype BAM SortedByCoordinate \
+	--outBAMsortingThreadN 1 \
+	--outFilterType BySJout \
+	--outFilterMultimapNmax 20 \
+	--alignSJoverhangMin 8 \
+	--alignSJDBoverhangMin 1 \
+	--outFilterMismatchNmax 999 \
+	--outFilterMismatchNoverReadLmax 0.04 \
+	--alignIntronMin 20 \
+	--alignIntronMax 1000000 \
+	--alignMatesGapMax 1000000
+done
+```
+
+
+There are, of course, lots of options when running STAR. To learn more, see the [documentation](https://github.com/alexdobin/STAR) for STAR
+
+## Generating an index file (.bai)
+
+Many files are generated by STAR for each sample. One important file is the .bam file.
+We would like to visualize the RNA-Seq reads on a local computer using Integrated Genomics Viewer [IGV](https://software.broadinstitute.org/software/igv/download). In order to do so, we need to generate an index file (.bai file)
+
+We will run this script using SBATCH as in the previous commands.
+
+```module load IGVtools/2.9.1
+module load java/11.0.11
+module load samtools/1.9
+
+cd /labs/miura/your_name/SHSY5Y/STAR/outs
+SAMPLES="SRR12352385 SRR12352386 SRR12352387 SRR12352388 SRR12352389 SRR12352390"
+
+for SAMPLE in $SAMPLES; do
+    igvtools index ${SAMPLE}Aligned.sortedByCoord.out.bam
+    printf "\n=====================================\n"
+    echo \
+    "done now..."
+done
+```
+
+
+## Visualizing using IGV
+
 
