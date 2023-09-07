@@ -49,5 +49,5 @@ jobs:
         run: |
           git add lectures/setup_1.html
           #git add lectures/setup_1.pdf
-          git commit -m "Render Lecture_2.Rmd to HTML and PDF"
+          git commit -m "Render setup_1.Rmd to HTML"
           git push origin HEAD:main
