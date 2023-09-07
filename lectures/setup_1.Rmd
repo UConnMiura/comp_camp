@@ -15,7 +15,7 @@ geometry: margin=1in
 
 # Installing Conda
 
-Before Conda, life in bioinformatics was hell. Now it is just a little less hellish because installing software packages and dependencies has a somewhat turn key solution. 
+Before Conda, life in bioinformatics for the beginner was hell. Now it is just a little less hellish because installing software packages and dependencies has a somewhat turn key solution. 
 
 [Conda](https://anaconda.org/anaconda/conda) is open source and can run on the HPC or your local machine. 
 
